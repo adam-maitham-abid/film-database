@@ -1,0 +1,158 @@
+.navigation {
+	display: grid;
+	position: absolute;
+	background-color: #3C3C3C;
+
+	z-index: 1;
+
+	grid-template-columns: 4.0rem auto 50vw 3.0rem auto 4.0rem;
+
+	width: 100vw;
+	height: 4.0rem;
+
+	/* box-shadow: 0px 0px 10px #000; Excessive shadows? */
+}
+
+.searchField {
+	display: inline-block;
+	grid-column-start: 3;
+	grid-column-end: 3;
+	width: 100%;
+
+	max-width: calc(100vw - 1.0rem);
+	border-radius: 0.5rem;
+
+	justify-self: center;
+	align-self: center;
+
+	border-radius: 0.5rem 0 0 0.5rem;
+	
+	background-color: #1E1E1E;
+
+	padding: 0 0 0 1.0rem;
+	font-size: 1.0rem;
+	height: 3.0rem;
+}
+
+.searchButton {
+	display: inline-block;
+	grid-column-start: 4;
+	grid-column-end: 4;
+
+	justify-self: center;
+	align-self: center;
+
+	border-radius: 0 0.5rem 0.5rem 0;
+
+	width: 3.0rem;
+	height: 3.0rem;
+	
+	background-color: #666;
+	cursor: pointer;
+}
+
+.searchResults {
+	position: absolute;
+	background-color: #2E2E2E;
+	width: 100%;
+	min-height: 10vh;
+	max-height: 80vh;
+	border-radius: 0 0 1.0rem 1.0rem;
+	top: 4.0rem;
+	grid-column-start: 3;
+	grid-column-end: 3;
+}
+
+.profile {
+	display: inline-block;
+	grid-column-start: 6;
+	grid-column-end: 6;
+
+	justify-self: center;
+	align-self: center;
+
+	width: 3.0rem;
+	height: 3.0rem;
+
+	text-align: center;
+	line-height: 3.0rem;
+
+	border-radius: 1.5rem;
+	background-color: #1E1E1E;
+
+	cursor: pointer;
+}
+
+.result {
+	border-radius: 10px;
+	overflow: hidden;
+	margin: 10px;
+	background-color: #3C3C3C;
+	display: flex;
+	box-shadow: 0 0 5px 0 black;
+}
+
+.result:hover {
+	background-color: #484848;
+	margin: 10px 15px 10px 5px;
+	transition: 100ms;
+}
+
+.result * {
+	display: inline-block;
+}
+
+.resultInfo {
+	padding: 0.5rem;
+}
+
+.resultTitle {
+	font-weight: 600;
+	font-size: 1.1rem;
+	margin: 0 0 0.2rem 0;
+	display: block;
+}
+
+.synopsis {
+	font-size: 0.9rem;
+	display: block;
+	max-height: 2.0rem;
+	line-height: 1.0rem;
+	text-overflow: clip;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: #DDD;
+}
+
+.account {
+	position: absolute;
+	top: 4.0rem;
+	right: 0;
+	width: 10rem;
+	padding: 0.5rem;
+	padding-bottom: 0;
+	background-color: #3C3C3C;
+}
+
+.accountLink {
+	display: block;
+	box-sizing: border-box;
+	padding: 0.5rem;
+	width: 100%;
+	font-size: 1.0rem;
+	margin-bottom: 0.5rem;
+	background-color: #888;
+	border-radius: 0.5rem;
+}
+
+@media (max-aspect-ratio: 1) {
+	.search {
+		width: 100vw;
+	}
+}
+
+@media (min-aspect-ratio: 1) {
+	.search {
+		width: 50vw;
+	}
+}

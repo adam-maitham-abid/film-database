@@ -1,0 +1,14 @@
+.container {
+	position: absolute;
+	top: 4.0rem;
+	padding: 1.0rem;
+}
+
+.favourites {
+	position: absolute;
+	top: 7.0rem;
+	left: 2.0rem;
+	padding: 1.0rem;
+	background-color: #282828;
+	border-radius: 1.0rem;
+}

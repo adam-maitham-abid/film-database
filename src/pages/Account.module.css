@@ -1,0 +1,54 @@
+.form {
+	background-color: #3C3C3C;
+	padding: 1.0rem;
+	border-radius: 1.0rem;
+	width: 25vw;
+	position: absolute;
+	top: 25vh;
+	left: 37.5vw;
+}
+
+.label {
+	margin: 0;
+}
+
+.input {
+	margin: 0;
+	margin-top: 0.2rem;
+	margin-bottom: 1.0rem;
+	padding: 0.5rem;
+	background-color: #1E1E1E;
+	width: 100%;
+}
+
+.submit {
+	padding: 0.5rem;
+	min-width: 5rem;
+	border-radius: 0.5rem;
+	color: #222;
+	background-color: #CCC;
+}
+
+.submit:hover {
+	background-color: #DDD;
+	cursor: pointer;
+}
+
+.hyperlink {
+	text-decoration: underline;
+	font-style: italic;
+	cursor: pointer;
+	color: #999;
+	float: right;
+}
+
+.hyperlink:hover {
+	color: #AAA;
+}
+
+.constraint {
+	color: #F33;
+	line-height: 1.0rem;
+	margin: 0.5rem 0;
+	list-style-type: none;
+}

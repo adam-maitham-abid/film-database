@@ -1,0 +1,71 @@
+html {
+	overflow-x: hidden;
+}
+
+.container {
+	top: 17.5vh;
+	left: 17.5vw;
+	width: 65vmax;
+	max-width: 100vw;
+	height: 65vh;
+	display: flex;
+	position: absolute;
+	flex-direction: row;
+	overflow: hidden;
+	box-shadow: 0 0 10vmin black;
+}
+
+.poster {
+	flex: 1;
+	object-fit: cover;
+	max-height: 65vh;
+}
+
+.information {
+	flex: 2;
+	padding: 2rem;
+	background-color: black;
+	overflow-y: auto;
+}
+
+.metaInfo {
+	font-size: 0.9rem;
+	font-weight: 400;
+	color: #FFF;
+}
+
+.tagLine {
+	font-size: 1.0rem;
+	margin: 1.0rem 0;
+	color: #FFF;
+}
+
+.backdrop {
+	opacity: 50%;
+	max-width: 100vmax;
+	max-height: 100vmax;
+	min-width: 100vw;
+	min-height: 100vh;
+	object-fit: cover;
+	pointer-events: none;
+}
+
+.favourite {
+	border: 1.5px solid white;
+	background-color: black;
+	color: white;
+	border-radius: 1.0rem;
+	width: 2.0rem;
+	height: 2.0rem;
+	cursor: pointer;
+}
+
+.icon {
+	font-size: 1.5rem;
+	margin: -17.5px;
+	padding: 0;
+}
+
+.right {
+	float: right;
+}
