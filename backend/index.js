@@ -46,6 +46,27 @@ app.use(cors({
 
 app.use(express.json());
 
+app.get("/auth", async (req, res) => {
+	auth = authenticate(req, res);
+	if (auth) {
+		res.status(200).json(auth);
+	}
+	else {
+		res.status(403).send({ message: "Authentication failed" });
+	}
+});
+
+app.get("/refresh-token", async (req, res) => {
+	auth = authenticate(req, res);
+	if (auth) {
+		const token = jwt.sign({ user_id: auth.user_id }, secret, { expiresIn: "1h" });
+		res.status(200).json({ "authToken": token });
+	}
+	else {
+		res.status(403).send();
+	}
+})
+
 app.get("/users", async (req, res) => {
 	const { rows } = await client.query("SELECT * FROM film_database.users");
 	res.json(rows);
@@ -83,7 +104,7 @@ app.post("/users/create", async (req, res) => {
 				.then(result => {
 					const row = result?.rows[0];
 					console.log(result.rows);
-					const token = jwt.sign({ user_id: row.user_id }, secret, { expiresIn: "168h" });
+					const token = jwt.sign({ user_id: row.user_id }, secret, { expiresIn: "1h" });
 					res.status(200).json({ "authToken": token });
 				});
 		}
@@ -193,7 +214,7 @@ app.get("/search", async (req, res) => {
 			sort = [ "popularity", "desc" ];
 		}
 		sort[0] = "f." + sort[0];
-		let query = `SELECT f.* FROM film_database.films f WHERE LOWER(f.title) LIKE LOWER($1) ${include?.length > 0 ? "AND f.film_id IN (SELECT fg.film_id FROM film_database.film_genres fg WHERE fg.genre_id = ANY(ARRAY[$3::INTEGER[]]) GROUP BY fg.film_id HAVING COUNT (DISTINCT fg.genre_id) = $4)" : ""} AND f.film_id NOT IN (SELECT fg.film_id FROM film_database.film_genres fg WHERE fg.genre_id = ANY(ARRAY[$2::INTEGER[]]) GROUP BY fg.film_id) ORDER BY ${sort.join(" ")};`;
+		let query = `SELECT f.* FROM film_database.films f WHERE LOWER(f.title) LIKE LOWER($1) ${include?.length > 0 ? "AND f.film_id IN (SELECT fg.film_id FROM film_database.film_genres fg WHERE fg.genre_id = ANY(ARRAY[$3::INTEGER[]]) GROUP BY fg.film_id HAVING COUNT (DISTINCT fg.genre_id) = $4)" : ""} AND f.film_id NOT IN (SELECT fg.film_id FROM film_database.film_genres fg WHERE fg.genre_id = ANY(ARRAY[$2::INTEGER[]]) GROUP BY fg.film_id) ORDER BY ${sort.join(" ")} LIMIT 30;`;
 		client.query(query, include?.length > 0 ? [ title, exclude, include, include.length ] : [ title, exclude ])
 			.then(response => {
 				res.status(200).send(response);

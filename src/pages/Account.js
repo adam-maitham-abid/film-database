@@ -72,23 +72,21 @@ export default () => {
 	return (
 		<div>
 			<form className={styles.form} onSubmit={submit} autoComplete="on">
-				{ invalidCredentials && !creatingAccount ? <h3 className={styles.constraint}>Invalid credentails.</h3> : null }
+				{ invalidCredentials && !creatingAccount && <h3 className={styles.constraint}>Invalid credentails.</h3> }
 				<label className={styles.label} htmlFor="username">Username</label>
 				<input className={styles.input} id="username" type="text" onChange={inputUsername}></input>
 				<ul>
-					{ !constraintUsernameAvailable ? <li className={styles.constraint}>Username is Taken</li> : null }
+					{ !constraintUsernameAvailable && <li className={styles.constraint}>Username is Taken</li> }
 				</ul>
 				<label className={styles.label} htmlFor="password">Password</label>
 				<input className={styles.input} id="password" type="password" onChange={inputPassword}></input>
-				{
-					creatingAccount ?
+				{ creatingAccount &&
 					<ul>
-						{ !constraintLength ? <li className={styles.constraint}>Password must contain at least 8 characters.</li> : null }
-						{ !constraintUppercaseLowercase ? <li className={styles.constraint}>Password must contain an uppercase and lowercase letter.</li> : null }
-						{ !constraintSpecialCharacter ? <li className={styles.constraint}>Password must contain at least one special character.</li> : null }
-						{ !constraintNumber ? <li className={styles.constraint}>Password must contain at least one number.</li> : null }
+						{ !constraintLength && <li className={styles.constraint}>Password must contain at least 8 characters.</li> }
+						{ !constraintUppercaseLowercase && <li className={styles.constraint}>Password must contain an uppercase and lowercase letter.</li> }
+						{ !constraintSpecialCharacter && <li className={styles.constraint}>Password must contain at least one special character.</li> }
+						{ !constraintNumber && <li className={styles.constraint}>Password must contain at least one number.</li> }
 					</ul>
-					: null
 				}
 				<button className={styles.submit} type="submit">{ creatingAccount ? "Sign up" : "Log in" }</button>
 				{ creatingAccount ? <a className={styles.hyperlink} onClick={() => setCreatingAccount(false)}>Use an existing account</a> : <a className={styles.hyperlink} onClick={() => setCreatingAccount(true)}>Create an account</a> }

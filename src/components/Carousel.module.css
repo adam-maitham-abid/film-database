@@ -1,0 +1,69 @@
+.carousel {
+	position: absolute;
+	top: 4rem;
+	width: 100vw;
+	height: 25vw;
+	background-color: black;
+}
+
+.backdrop {
+	position: absolute;
+	display: inline;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	opacity: 50%;
+}
+
+.container {
+	position: absolute;
+	width: 40vw;
+	left: 30vw;
+	top: 3.5vw;
+}
+
+.cover {
+	width: 175px;
+	border-radius: 1.0rem;
+	box-shadow: 0 0 20px black;
+	object-fit: cover;
+}
+
+.info {
+	flex: 1;
+	position: absolute;
+	display: inline;
+	padding: 2rem;
+}
+
+.dots {
+	position: absolute;
+	display: flex;
+	left: 40vw;
+	width: 20vw;
+	bottom: 1.5vw;
+	gap: 1rem;
+	justify-content: center;
+}
+
+.dot {
+	display: inline-block;
+	border-radius: 0.35rem;
+	background-color: #BBB;
+	align-items: center;
+	width: 0.7rem;
+	height: 0.7rem;
+	cursor: pointer;
+}
+
+.currentDot {
+	display: inline-block;
+	border-radius: 0.35rem;
+	align-items: center;
+	width: 0.7rem;
+	height: 0.7rem;
+	cursor: pointer;
+	background-color: white;
+}

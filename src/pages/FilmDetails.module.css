@@ -69,3 +69,8 @@ html {
 .right {
 	float: right;
 }
+
+.link {
+	color: #4BF;
+	text-decoration: underline;
+}

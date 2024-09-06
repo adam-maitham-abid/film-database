@@ -18,11 +18,14 @@ export default () => {
 	const [auth, setAuth] = useState(null);
 
 	useEffect(() => {
-		axios.get("http://localhost:3001/auth")
+		axios.get("http://localhost:3001/auth", { headers: { Authorization: `bearer ${localStorage.getItem("authToken")}` } })
 			.then(response => {
 				if (response.data === false) {
 					localStorage.setItem("authToken", null);
 					setAuth(null);
+				}
+				else {
+					setAuth(response.data);
 				}
 			})
 			.catch(error => console.log(error));
@@ -33,7 +36,7 @@ export default () => {
 			<Routes>
 				<Route path="/" element={<Home/>}/>
 				<Route path="/search" element={<Search/>}/>
-				<Route path="/movies/:id" element={<FilmDetails/>}/>
+				<Route path="/movies/:id" element={<FilmDetails auth={auth}/>}/>
 				<Route path="/favourites" element={<Favourites/>}/>
 				<Route path="/account" element={<Account/>}/>
 				<Route path="*" element={<PageNotFound/>}/>

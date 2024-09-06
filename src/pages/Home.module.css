@@ -1,12 +1,12 @@
 .container {
 	position: absolute;
-	top: 4.0rem;
+	top: calc(4.0rem + 25vw);
 	padding: 1.0rem;
 }
 
 .favourites {
 	position: absolute;
-	top: 7.0rem;
+	top: calc(8.0rem + 25vw);
 	left: 2.0rem;
 	padding: 1.0rem;
 	background-color: #282828;

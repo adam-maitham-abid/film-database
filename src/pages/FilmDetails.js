@@ -5,7 +5,7 @@ import styles from "./FilmDetails.module.css"
 import axios from 'axios';
 import Navigation from '../components/Navigation';
 
-export default () => {
+export default ({ auth }) => {
 	const { id } = useParams();
 	const [favourited, setFavourited] = useState(false);
 	const [data, setData] = useState(null);
@@ -42,14 +42,14 @@ export default () => {
 			<div className={styles.container}>
 				<img className={styles.poster} src={"https://image.tmdb.org/t/p/original/" + data?.cover}></img>
 				<div className={styles.information}>
-					<h1>{data?.title}<span className={styles.right}>{ favourited ? <button className={styles.favourite} onClick={unfavourite}><div className={styles.icon}>&#9733;</div></button> : <button className={styles.favourite} onClick={favourite}><div className={styles.icon}>&#9734;</div></button> }</span></h1>
+					<h1>{data?.title}<span className={styles.right}>{ auth && (favourited ? <button className={styles.favourite} onClick={unfavourite}><div className={styles.icon}>&#9733;</div></button> : <button className={styles.favourite} onClick={favourite}><div className={styles.icon}>&#9734;</div></button>) }</span></h1>
 					<div className={styles.metaInfo}>User Rating: {data?.rating?.toFixed(2)} Year: {data?.release_date?.substr(0, 4)}</div>
 					{ data?.tagline ? <div className={styles.tagLine}>"{data.tagline}"</div> : <br/> }
 					<div>{data?.synopsis}</div>
 					<br/>
-					<div>Genres: {data?.genres.map(item => genres[Number(item) - 1]?.genre_name).join(", ")}</div>
+					<div>Genres: {data?.genres.map((item, index) => (<><a className={styles.link} href={"/search?include=" + item}>{(genres[Number(item) - 1]?.genre_name)}</a>{ (index < data?.genres.length - 1) && <>, </> }</>))}</div>
 				</div>
 			</div>
 		</div>
-	)
-}
+	);
+};

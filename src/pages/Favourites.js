@@ -6,7 +6,7 @@ import Navigation from "../components/Navigation";
 
 import styles from './Favourites.module.css'
 
-export default () => {
+export default ({ auth }) => {
 	const [favourites, setFavourites] = useState(null);
 
 	useEffect(() => {
@@ -30,11 +30,11 @@ export default () => {
 
 	return (
 		<div>
-			<Navigation/>
+			<Navigation auth={auth}/>
 			<div className={styles.container}>
 				<h1>Favourites</h1>
-				{ favourites?.map(item => (<Film key={item.id} title={item.title} id={item.id} cover={item.cover}/>)) }
+				{ favourites && favourites.length > 0 ? favourites.map(item => (<Film key={item.id} title={item.title} id={item.id} cover={item.cover}/>)) : <div>No favourites have been added to your list yet. Look at some movies and you can add them to your list via the star icon.</div> }
 			</div>
 		</div>
 	);
-}
+};
