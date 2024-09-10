@@ -21,7 +21,7 @@ export default ({ auth }) => {
 			.then(response => setUser(response.data))
 			.catch(error => console.log(error));
 		await axios.get("http://localhost:3001/favourites", { headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` } })
-			.then(response => getMovies(response.data))
+			.then(async response => await getMovies(response.data))
 			.catch(error => console.log(error));
 		async function getMovies(data) {
 			let movies = [];
@@ -38,16 +38,18 @@ export default ({ auth }) => {
 	})();},[]);
 
 	return (
-		<div>
+		<>
 			<Navigation auth={auth}/>
-			<Carousel items={carouselItems}/>
-			<div className={styles.container}>
-				{ user ? (<h1>Welcome back, {user?.username}!</h1>) : (<h1>Welcome, Guest!</h1>) }
+			<div className={styles.scroll}>
+				<Carousel items={carouselItems}/>
+				<div className={styles.container}>
+					{ user ? (<h1>Welcome back, {user?.username}!</h1>) : (<h1>Welcome, Guest!</h1>) }
+					<div className={styles.favourites}>
+						<h2>Your Favourites</h2>
+						{ favourites?.map(item => <Film id={item.id} title={item.title} cover={item.cover}/>) }
+					</div>
+				</div>
 			</div>
-			<div className={styles.favourites}>
-				<h2>Your Favourites</h2>
-				{ favourites?.map(item => <Film id={item.id} title={item.title} cover={item.cover}/>) }
-			</div>
-		</div>
+		</>
 	);
 };

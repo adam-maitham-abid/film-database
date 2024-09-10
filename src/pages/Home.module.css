@@ -1,14 +1,15 @@
 .container {
-	position: absolute;
-	top: calc(4.0rem + 25vw);
 	padding: 1.0rem;
+	display: block;
 }
 
 .favourites {
-	position: absolute;
-	top: calc(8.0rem + 25vw);
-	left: 2.0rem;
 	padding: 1.0rem;
-	background-color: #282828;
 	border-radius: 1.0rem;
+}
+
+.scroll {
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: calc(100vh - 4.0rem);
 }

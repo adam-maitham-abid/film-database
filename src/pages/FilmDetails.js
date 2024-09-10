@@ -37,7 +37,7 @@ export default ({ auth }) => {
 
 	return (
 		<div>
-			<Navigation/>
+			<Navigation auth={auth}/>
 			<img className={styles.backdrop} src={"https://image.tmdb.org/t/p/original/" + data?.backdrop}></img>
 			<div className={styles.container}>
 				<img className={styles.poster} src={"https://image.tmdb.org/t/p/original/" + data?.cover}></img>

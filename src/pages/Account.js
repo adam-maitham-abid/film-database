@@ -43,8 +43,14 @@ export default () => {
 						console.log("Username is taken");
 					}
 				}
-				if (error.response.status === 401) {
+				else if (error.response.status === 401) {
 					if (error.response.data.error === "Invalid credentials") {
+						setInvalidCredentials(true);
+						console.log("Invalid credentials");
+					}
+				}
+				else if (error.response.status === 404) {
+					if (error.response.data.error === "Account Not Found") {
 						setInvalidCredentials(true);
 						console.log("Invalid credentials");
 					}

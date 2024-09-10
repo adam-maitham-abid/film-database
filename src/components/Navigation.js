@@ -30,12 +30,6 @@ export default ({auth, onChange = null, defaultValue = null}) => {
 			setResults(null);
 		}
 	}, [query]);
-
-	function properSearch(event) {
-		if (event.keyCode === 13) {
-			navigate("/search?query=" + query);
-		}
-	}
 	
 	return (
 		<nav className={styles.navigation}>

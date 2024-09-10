@@ -1,6 +1,5 @@
 .carousel {
-	position: absolute;
-	top: 4rem;
+	position: relative;
 	width: 100vw;
 	height: 25vw;
 	background-color: black;
@@ -25,9 +24,9 @@
 }
 
 .cover {
-	width: 175px;
+	height: 17vw;
 	border-radius: 1.0rem;
-	box-shadow: 0 0 20px black;
+	box-shadow: 0 0 30px black;
 	object-fit: cover;
 }
 
@@ -61,9 +60,9 @@
 .currentDot {
 	display: inline-block;
 	border-radius: 0.35rem;
+	background-color: white;
 	align-items: center;
 	width: 0.7rem;
 	height: 0.7rem;
 	cursor: pointer;
-	background-color: white;
 }

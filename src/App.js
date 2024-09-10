@@ -34,12 +34,12 @@ export default () => {
 	return (
 		<Router>
 			<Routes>
-				<Route path="/" element={<Home/>}/>
-				<Route path="/search" element={<Search/>}/>
+				<Route path="/" element={<Home auth={auth}/>}/>
+				<Route path="/search" element={<Search auth={auth}/>}/>
 				<Route path="/movies/:id" element={<FilmDetails auth={auth}/>}/>
-				<Route path="/favourites" element={<Favourites/>}/>
-				<Route path="/account" element={<Account/>}/>
-				<Route path="*" element={<PageNotFound/>}/>
+				<Route path="/favourites" element={<Favourites auth={auth}/>}/>
+				<Route path="/account" element={<Account auth={auth}/>}/>
+				<Route path="*" element={<PageNotFound auth={auth}/>}/>
 			</Routes>
 		</Router>
 	);

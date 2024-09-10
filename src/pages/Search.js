@@ -10,7 +10,7 @@ import styles from './Search.module.css'
 
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 
-const sortTypes = { "Rating Ascending": "rating.asc", "Rating Descending": "rating.desc", "Release Date Ascending": "release_date.asc", "Release Date Descending": "release_date.desc", "Popularity Ascending": "popularity.asc", "Popularity Descending": "popularity.desc" };
+const sortTypes = { "Rating Asc.": "rating.asc", "Rating Desc.": "rating.desc", "Release Date Asc.": "release_date.asc", "Release Date Desc.": "release_date.desc", "Popularity Asc.": "popularity.asc", "Popularity Desc.": "popularity.desc" };
 
 export default ({ auth }) => {
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -101,14 +101,14 @@ export default ({ auth }) => {
 					{ showSort &&
 						(<div className={styles.sortMenu}>
 							{ Object.keys(sortTypes).map(key => (
-								<div className={(sort === sortTypes[key] ? styles.green : styles.default)} onClick={() => sortBy(sortTypes[key])}>{key}</div>
+								<button className={(sort === sortTypes[key] ? styles.green : styles.default)} onClick={() => sortBy(sortTypes[key])}>{key}</button>
 							)) }
 						</div>)
 					}
 					{ showFilters &&
 						(<div className={styles.sortMenu}>
 							{ Object.keys(genres).map(key => (
-								<div className={(filters.include.includes(Number(key) + 1) ? styles.green : (filters.exclude.includes(Number(key) + 1) ? styles.red : styles.default))} key={key} onClick={() => filter(Number(key) + 1)}>{genres[key].genre_name}</div>
+								<button className={(filters.include.includes(Number(key) + 1) ? styles.green : (filters.exclude.includes(Number(key) + 1) ? styles.red : styles.default))} key={key} onClick={() => filter(Number(key) + 1)}>{genres[key].genre_name}</button>
 							)) }
 						</div>)
 					}

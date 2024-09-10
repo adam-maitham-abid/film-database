@@ -1,6 +1,6 @@
 import styles from "./PageNotFound.module.css"
 
-export default () => (
+export default ({ auth }) => (
 	<div className={styles.container}>
 		<div>
 			<h1 className={styles.h1}>404</h1>

@@ -96,7 +96,10 @@ app.post("/users/create", async (req, res) => {
 		|| !regexSpecialCharacter.test(password)
 		|| !regexUppercaseLowercase.test(password)
 		|| !regexNumber.test(password)
-	) res.status(403).send("Invalid password");
+	) {
+		res.status(403).send("Invalid password");
+		return;
+	}
 
 	bcrypt.hash(password, 10, async (error, hash) => {
 		try {
@@ -263,7 +266,7 @@ app.get("/scrape", async (req, res) => {
 			}
 		})
 		.catch(error => console.log(error));
-	for (var i = 1; i < 51; i++)
+	for (var i = 1; i < 251; i++)
 	{
 		await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=1660663c1dcbb2cd1b092f50e120b41b&sort_by=popularity.desc&page=${i}`)
 			.then(response => {
