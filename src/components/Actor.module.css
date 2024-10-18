@@ -1,0 +1,21 @@
+.card {
+	width: 100px;
+	height: 145px;
+	border-radius: 1.0rem;
+	background-color: #3C3C3C;
+	overflow: hidden;
+	transform-origin: bottom center;
+}
+
+.picture {
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+}
+
+.name {
+	width: 100px;
+	height: 45px;
+	text-align: center;
+	font-size: 0.8rem;
+}

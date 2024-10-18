@@ -13,29 +13,31 @@ export default ({ auth }) => {
 	const [favourites, setFavourites] = useState(null);
 	const [carouselItems, setCarouselItems] = useState(null);
 
-	useEffect(() => { (async () => {
-		await axios.get("http://localhost:3001/search?title=")
-			.then(response => setCarouselItems(response?.data?.rows.slice(0, 7)))
-			.catch(error => console.log(error));
-		await axios.get("http://localhost:3001/user", { headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` } })
-			.then(response => setUser(response.data))
-			.catch(error => console.log(error));
-		await axios.get("http://localhost:3001/favourites", { headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` } })
-			.then(async response => await getMovies(response.data))
-			.catch(error => console.log(error));
-		async function getMovies(data) {
-			let movies = [];
-			for (let i = 0; i < data.length; i++) {
-				await axios.get(`http://localhost:3001/movies/${data[i].film_id}`)
-					.then(response => {
-						console.log(response);
-						movies.push({ "id": response.data.film_id, "title": response.data.title, "cover": response.data.cover })
-					})
-					.catch(error => console.log(error));
-				setFavourites(movies);
+	useEffect(() => {
+		(async () => {
+			await axios.get("http://localhost:3001/search?title=")
+				.then(response => setCarouselItems(response?.data?.rows.slice(0, 7)))
+				.catch(error => console.log(error));
+			await axios.get("http://localhost:3001/user", { headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` } })
+				.then(response => setUser(response.data))
+				.catch(error => console.log(error));
+			await axios.get("http://localhost:3001/favourites", { headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` } })
+				.then(response => getMovies(response.data))
+				.catch(error => console.log(error));
+			async function getMovies(data) {
+				let movies = [];
+				for (let i = 0; i < data.length; i++) {
+					await axios.get(`http://localhost:3001/movies/${data[i].film_id}`)
+						.then(response => {
+							console.log(response);
+							movies.push({ id: response.data.film_id, title: response.data.title, cover: response.data.cover })
+						})
+						.catch(error => console.log(error));
+					setFavourites(movies);
+				}
 			}
-		}
-	})();},[]);
+		})();
+	}, []);
 
 	return (
 		<>
@@ -43,11 +45,13 @@ export default ({ auth }) => {
 			<div className={styles.scroll}>
 				<Carousel items={carouselItems}/>
 				<div className={styles.container}>
-					{ user ? (<h1>Welcome back, {user?.username}!</h1>) : (<h1>Welcome, Guest!</h1>) }
-					<div className={styles.favourites}>
-						<h2>Your Favourites</h2>
-						{ favourites?.map(item => <Film id={item.id} title={item.title} cover={item.cover}/>) }
-					</div>
+					{ user ? <h1>Welcome back, {user?.username}!</h1> : <h1>Welcome, Guest! <a className={styles.login} href="/account">Login to your account.</a></h1> }
+					{ auth &&
+						<div className={styles.favourites}>
+							<h2>Your Favourites</h2>
+							{ favourites ? favourites.map((item, index) => <Film key={index} id={item.id} title={item.title} cover={item.cover}/>) : <div>Nothing here right now, go add some movies to your favourites!</div> }
+						</div>
+					}
 				</div>
 			</div>
 		</>

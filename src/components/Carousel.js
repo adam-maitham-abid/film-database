@@ -35,7 +35,7 @@ export default ({ items }) => {
 			{ items && <div>
 				<img className={styles.backdrop} src={"https://image.tmdb.org/t/p/original" + items[rotation].backdrop}/>
 				<div className={styles.container}>
-					<a href={"http://localhost:3002/movies/" + items[rotation].film_id}><img className={styles.cover} src={"https://image.tmdb.org/t/p/w400" + items[rotation].cover}/></a>
+					<a href={"http://localhost:3002/movies/" + items[rotation].film_id}><img className={styles.cover} src={"https://image.tmdb.org/t/p/w400" + items[rotation].cover} alt={items[rotation].title}/></a>
 					<div className={styles.info}>
 						<h2>{items[rotation].title}</h2>
 						<br/>

@@ -13,7 +13,6 @@ const secret = "bigsecret";
 function authenticate(req, res) {
 	try {
 		const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
-		console.log(token);
 
 		if (token == null) return null;
 
@@ -47,13 +46,8 @@ app.use(cors({
 app.use(express.json());
 
 app.get("/auth", async (req, res) => {
-	auth = authenticate(req, res);
-	if (auth) {
-		res.status(200).json(auth);
-	}
-	else {
-		res.status(403).send({ message: "Authentication failed" });
-	}
+	const auth = authenticate(req, res);
+	auth ? res.status(200).json(auth) : res.status(403).send();
 });
 
 app.get("/refresh-token", async (req, res) => {
@@ -122,8 +116,8 @@ app.post("/favourite", async (req, res) => {
 	const { film_id } = req.body;
 	const authUser = authenticate(req, res);
 	if (authUser) {
-		const result = await client.query(`INSERT INTO film_database.favourites (user_id, film_id) VALUES ('${authUser.user_id}', '${film_id}')`)
-			.catch(error => res.status(500).send(error));
+		const result = await client.query("INSERT INTO film_database.favourites (user_id, film_id) VALUES ($1, $2)", [ authUser.user_id, film_id ])
+			.catch(error => (console.log(error), res.status(500).send(error)));
 	}
 });
 
@@ -131,18 +125,19 @@ app.post("/unfavourite", async (req, res) => {
 	const { film_id } = req.body;
 	const authUser = authenticate(req, res);
 	if (authUser) {
-		await client.query(`DELETE FROM film_database.favourites WHERE user_id = ${authUser.user_id} AND film_id = ${film_id}`)
-			.catch(error => res.status(500).send(error));
+		await client.query("DELETE FROM film_database.favourites WHERE user_id = $1 AND film_id = $2", [ authUser.user_id, film_id ])
+			.catch(error => (console.log(error), res.status(500).send(error)));
 	}
 });
 
-app.post("/favourited", async (req, res) => {
-	const { film_id } = req.body;
+app.get("/favourited", async (req, res) => {
+	console.log("Request: GET /favourited");
+	const film_id = req.query.film_id;
 	const authUser = authenticate(req, res);
 	if (authUser) {
-		const result = await client.query(`SELECT * FROM film_database.favourites WHERE user_id = ${authUser.user_id} AND film_id = ${film_id}`)
-			.catch(error => res.status(500).send(error));
-		res.json(result.rows[0]);
+		await client.query("SELECT * FROM film_database.favourites WHERE user_id = $1 AND film_id = $2", [ authUser.user_id, film_id ])
+			.then(response => res.json(response.rows[0]))
+			.catch(error => (res.status(500).send(error), console.log(error)));
 	}
 });
 
@@ -150,14 +145,86 @@ app.get("/favourites", async (req, res) => {
 	console.log(req.headers.authorization);
 	const auth = authenticate(req, res);
 	if (auth) {
-		await client.query(`SELECT * FROM film_database.favourites WHERE user_id = ${auth.user_id}`)
+		await client.query(`SELECT * FROM film_database.favourites WHERE user_id = $1`, [ auth.user_id ])
 			.then(response => res.status(200).json(response.rows))
 			.catch(error => console.log(error));
 	}
 });
 
-app.listen(port, () => {
-	console.log("Listening on port 3001");
+app.get("/lists", async (req, res) => {
+	console.log("Request: GET /lists");
+	const auth = authenticate(req, res);
+	if (!auth) return res.status(403).send({ message: "You must be logged in to view your film lists." });
+	if (req.query.include_films) {
+		await client.query("SELECT l.*, JSON_AGG(f.*) AS films FROM film_database.lists l LEFT JOIN	film_database.list_films lf ON lf.list_id = l.list_id LEFT JOIN film_database.films f ON f.film_id = lf.film_id WHERE user_id = $1 GROUP BY l.list_id, l.list_name ORDER BY l.list_id", [ auth.user_id ])
+			.then(data => res.status(200).json(data.rows))
+			.catch(error => console.log(error));
+	}
+	else {
+		await client.query("SELECT * FROM film_database.lists WHERE user_id = $1", [ auth.user_id ])
+			.then(data => res.status(200).json(data.rows))
+			.catch(error => (res.status(500).send(), console.log(error)));
+	}
+});
+
+app.get("/lists/:id", async (req, res) => {
+	console.log("Request: GET /lists/:id");
+	const list_id = req.params.id;
+	if (!authenticate(req, res)) return res.status(403).send();
+	await client.query("SELECT list_id, ARRAY_AGG(film_id) AS films FROM film_database.list_films WHERE list_id = $1 GROUP BY list_id;", [ list_id ])
+		.then(data => data.rows ? res.status(200).json(data.rows[0]) : res.status(404).send())
+		.catch(error => (res.status(500).send(), console.log(error)));
+});
+
+app.post("/lists", async(req, res) => {
+	console.log("Request: POST /lists");
+	const auth = authenticate(req, res);
+	const { listName } = req.body;
+	if (!auth) return res.status(403).send();
+	await client.query("INSERT INTO film_database.lists (user_id, list_name) VALUES ($1, $2)", [ auth.user_id, listName ])
+		.then(data => res.status(200).send())
+		.catch(error => (res.status(500).send(), console.log(error)));
+});
+
+app.delete("/lists/:id", async (req, res) => {
+	console.log("Request: DELETE /lists/:id");
+	const auth = authenticate(req, res);
+	if (!auth) return res.status(403).send();
+	client.query("DELETE FROM film_database.lists WHERE list_id = $1 AND user_id = $2", [ req.params.id, auth.user_id ])
+		.then(data => res.status(200).send())
+		.catch(error => console.log(error));
+});
+
+app.get("/list_films", async(req, res) => {
+	console.log("Request: GET /list_films");
+	const auth = authenticate(req, res);
+	const film_id = req.query.film_id;
+	await client.query("SELECT * FROM film_database.list_films WHERE film_id = $1", [ film_id ])
+		.then(data => res.status(200).send(data?.rows))
+		.catch(error => (res.status(500).send(), console.log(error)));
+});
+
+app.post("/list_films", async(req, res) => {
+	console.log("Request: POST /list_films");
+	const auth = authenticate(req, res);
+	const { film_id, list_id } = req.body;
+	console.log(req.body);
+	// if (!auth) return res.status(403).send();
+	await client.query("INSERT INTO film_database.list_films (film_id, list_id) VALUES ($1, $2)", [ film_id, list_id ])
+		.then(data => res.status(200).send())
+		.catch(error => (res.status(500).send(), console.log(error)));
+});
+
+app.delete("/list_films", async(req, res) => {
+	console.log("Request: DELETE /list_films");
+	const { film_id, list_id } = req.query;
+	await client.query("DELETE FROM film_database.list_films WHERE film_id = $1 AND list_id = $2", [ film_id, list_id ])
+		.then(data => res.status(200).send())
+		.catch(error => (res.status(500).send(), console.log(error)));
+});
+
+app.get("/actors", async (req, res) => {
+	console.log("Request: GET /actors");
 });
 
 app.post("/login", async (req, res) => {
@@ -237,7 +304,7 @@ app.get("/movies/:id", async (req, res) => {
 	console.log("Request: GET /movies/:id");
 	try {
 		const id = req.params.id;
-		client.query("SELECT f.*, ARRAY_AGG(fg.genre_id) AS genres FROM film_database.films f LEFT JOIN film_database.film_genres fg ON f.film_id = fg.film_id WHERE f.film_id = $1 GROUP BY f.film_id", [ id ])
+		client.query("SELECT f.*, genres, actors FROM film_database.films f JOIN (SELECT fg.film_id, ARRAY_AGG(fg.genre_id) AS genres FROM film_database.film_genres fg GROUP BY fg.film_id) AS genres ON f.film_id = genres.film_id LEFT JOIN (SELECT fa.film_id, ARRAY_AGG(JSON_BUILD_OBJECT('actor_id', a.actor_id, 'name', a.name, 'picture', a.picture)) AS actors FROM film_database.film_actors fa JOIN film_database.actors a ON fa.actor_id = a.actor_id GROUP BY fa.film_id) AS actors ON f.film_id = actors.film_id WHERE f.film_id = $1;", [ id ])
 			.then(response => {
 				res.status(200).send(response.rows[0]);
 			})
@@ -252,7 +319,7 @@ app.get("/movies/:id", async (req, res) => {
 	}
 });
 
-// One-time use function to set up the initial database
+// One-time use function to populate the database with data from TMDB.
 app.get("/scrape", async (req, res) => {
 	console.log("Request: GET /scrape");
 	let mapping = [];
@@ -268,6 +335,7 @@ app.get("/scrape", async (req, res) => {
 		.catch(error => console.log(error));
 	for (var i = 1; i < 251; i++)
 	{
+		await axios.get(`https://api.themoviedb.org/3/movie/${i}/credits?api_key=1660663c1dcbb2cd1b092f50e120b41b`);
 		await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=1660663c1dcbb2cd1b092f50e120b41b&sort_by=popularity.desc&page=${i}`)
 			.then(response => {
 				response.data.results.forEach(async result => {
@@ -279,7 +347,11 @@ app.get("/scrape", async (req, res) => {
 				})
 			})
 			.catch(error => console.log(error));
-		await new Promise(resolve => setTimeout(resolve, 250));
+		await new Promise(resolve => setTimeout(resolve, 300));
 	}
 	res.status(200).send();
+});
+
+app.listen(port, () => {
+	console.log("Listening on port 3001");
 });

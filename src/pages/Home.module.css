@@ -13,3 +13,10 @@
 	overflow-x: hidden;
 	max-height: calc(100vh - 4.0rem);
 }
+
+.login {
+	color: #4BF;
+	text-decoration: underline;
+	font-weight: 400;
+	font-size: 1.0rem;
+}

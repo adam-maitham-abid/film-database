@@ -1,0 +1,19 @@
+.toast {
+	position: absolute;
+	top: 4vh;
+	right: 3vw;
+	padding: 1.0rem;
+	border-radius: 0.5rem;
+	background-color: #448822;
+	box-shadow: 0 0 1.0rem 0.5rem #FFFFFFAA;
+}
+
+.toastHidden {
+	opacity: 0;
+	transition: 1000ms;
+}
+
+.toastShown {
+	opacity: 1;
+	transition: 500ms;
+}

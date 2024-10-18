@@ -18,6 +18,15 @@
 }
 
 button {
+	cursor: pointer;
+	background-color: transparent;
+	border: 2px solid white;
+	border-radius: 0.2rem;
+	padding: 0.2rem;
+	font-weight: 600;
+}
+
+button, label {
 	user-select: none;
 	-ms-user-select: none;
 	-moz-user-select: none;

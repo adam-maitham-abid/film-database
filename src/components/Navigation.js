@@ -12,6 +12,7 @@ export default ({auth, onChange = null, defaultValue = null}) => {
 	const [query, setQuery] = useState("");
 	const [results, setResults] = useState(null);
 	const [profileDropdown, setProfileDropdown] = useState(false);
+	const [focused, setFocused] = useState(false);
 
 	if (typeof onChange !== "function") {
 		onChange = (event) => { setQuery(event.target.value); }
@@ -33,20 +34,22 @@ export default ({auth, onChange = null, defaultValue = null}) => {
 	
 	return (
 		<nav className={styles.navigation}>
-			<input className={styles.searchField} onKeyDown={e => e.keyCode === 13 && navigate("/search?query=" + query)} type="text" placeholder="Search for a movie..." defaultValue={defaultValue} onChange={onChange}/>
+			<a href="/">Home</a>
+			<input className={styles.searchField} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} onKeyDown={e => e.keyCode === 13 && navigate("/search?query=" + query)} type="text" placeholder="Search for a movie..." defaultValue={defaultValue} onChange={onChange}/>
 			<button className={styles.searchButton} onClick={() => navigate("/search?query=" + query)}>&#x1F50D;&#xFE0E;</button>
 			<a className={styles.profile} onClick={() => setProfileDropdown(!profileDropdown)}>P</a>
 			{ profileDropdown &&
 				<div className={styles.account}>
-					<a className={styles.accountLink} href="/account">Account</a>
+					<a className={styles.accountLink} href="/account">ACCOUNT</a>
 					{ auth && <div>
-						<a className={styles.accountLink} href="/favourites">Favourites</a>
-						<a className={styles.accountLink} onClick={() => localStorage.removeItem("authToken")} href="/">Log out</a>
+						<a className={styles.accountLink} href="/favourites">FAVOURITES</a>
+						<a className={styles.accountLink} href="/lists">MY FILM LISTS</a>
+						<a className={styles.accountLink} onClick={() => localStorage.removeItem("authToken")} href="/">LOG OUT</a>
 					</div> }
 				</div>
 			}
-			{ results &&
-				<div className={styles.searchResults}>
+			{ results && focused &&
+				<div className={styles.searchResults} onMouseDown={(e) => e.preventDefault()}>
 					{(results.length > 0) ? results.slice(0, 8).map(item => (
 						<a href={"/movies/" + item.film_id}>
 							<div className={styles.result}>

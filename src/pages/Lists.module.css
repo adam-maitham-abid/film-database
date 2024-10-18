@@ -1,0 +1,56 @@
+.list {
+	background-color: #333;
+	padding: 1rem;
+	margin: 1rem;
+	border-radius: 1rem;
+}
+
+.overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: black;
+	opacity: 0.5;
+}
+
+.addBox {
+	position: absolute;
+	top: 20vh;
+	left: 30vw;
+	width: 40vw;
+	height: 60vh;
+	background-color: #3C3C3C;
+	opacity: 2.0;
+	padding: 2.0rem;
+	box-sizing: border-box;
+	border-radius: 1.0rem;
+}
+
+.addSearch {
+	background-color: #000;
+	font-size: 1.33rem;
+	padding: 1.0rem;
+	width: 100%;
+	border-radius: 0.5rem;
+}
+
+.h3 {
+	font-size: 1.2rem;
+	color: white;
+	width: 15.0rem;
+	display: inline-block;
+	padding: 0;
+	margin: 0;
+	background-color: transparent;
+	border: none;
+	outline: 2px solid white;
+	font-weight: 600;
+}
+
+.scroll {
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: calc(100vh - 4.0rem);
+}
